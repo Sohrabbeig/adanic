@@ -5,19 +5,16 @@ db = client.adanalas
 merchant_category = db.merchant_category
 terminals = db.terminals
 
-s = []  # merchants with two categories, one is expense
+s = []  # merchants with two categories
 
 l = list(merchant_category.aggregate(
     [
         {"$group": {"_id": {"merchant": "$merchant"}, "category": {"$addToSet": "$category"}}},
-        {"$match": {"category": {"$size": 2, "$in": ["expense"]}}}
+        {"$match": {"category": {"$size": 2}}}
     ]
 ))
 
 for i in l:
-    if i["category"][0] == "expense":
-        s.append([i["_id"]["merchant"], i["category"][1]])
-    else:
         s.append([i["_id"]["merchant"], i["category"][0]])
 
 for j in s:
